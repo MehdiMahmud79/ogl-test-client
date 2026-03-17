@@ -1,0 +1,32 @@
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$cyan-palette,
+        tertiary: mat.$orange-palette,
+        // Optional: you can define 'background' and 'surface' palettes if needed
+      ),
+      typography: Roboto,
+      density: 0,
+      // Enable dark mode by setting 'dark' property to true
+      dark: true,
+    )
+  );
+}
+
+body {
+  // Switch color scheme to dark
+  color-scheme: dark;
+
+  // Use Angular Material system variables for dark theme colors
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset margin and set height
+  margin: 0;
+  height: 100%;
+}

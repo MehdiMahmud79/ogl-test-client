@@ -1,0 +1,13 @@
+<div
+  [class.error]="data.type === 'error'"
+  [class.success]="data.type === 'success'"
+  matSnackBarLabel
+>
+  {{ data?.title ? data.title : 'Notification' }}
+</div>
+<div class="example-pizza-party" matSnackBarLabel>
+  {{ data.message }}
+</div>
+<span matSnackBarActions>
+  <button matButton matSnackBarAction (click)="snackBarRef.dismissWithAction()">Close</button>
+</span>

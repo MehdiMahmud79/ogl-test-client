@@ -1,0 +1,27 @@
+<div class="">
+  <h3 mat-dialog-title class="title">{{ data.title }}</h3>
+  <div mat-dialog-content>
+    <h4 class="m-4 p-4">{{ data.text }}</h4>
+    @if (data?.text1) {
+      <h4 class="m-4 p-2 text-warning">{{ data?.text1 }}</h4>
+    }
+    @if (data?.text2) {
+      <h4 class="m-4 p-2 text-warning">{{ data?.text2 }}</h4>
+    }
+    @if (data?.text3) {
+      <h4 class="m-4 p-2 text-warning">{{ data?.text3 }}</h4>
+    }
+  </div>
+  <div mat-dialog-actions>
+    <button mat-stroked-button (click)="onYesClick()">
+      {{ data?.confirmText ? data?.confirmText : 'Yes' }}
+    </button>
+    <button mat-stroked-button (click)="onNoClick()" cdkFocusInitial>
+      {{ data?.cancelText ? data?.cancelText : 'No' }}
+    </button>
+
+    @if (data?.cancelBtn) {
+      <button mat-button (click)="onCancelClick()" cdkFocusInitial>Cancel</button>
+    }
+  </div>
+</div>

@@ -1,0 +1,15 @@
+.error {
+  color: red;
+  height: 60px;
+  width: 103%;
+
+  border-bottom: 2px solid red;
+  background-color: rgba(245, 0, 0, 0.226) !important;
+}
+.success {
+  color: green;
+  height: 60px;
+  width: 103%;
+  border-bottom: 2px solid green;
+  background-color: rgba(0, 128, 0, 0.192) !important;
+}
