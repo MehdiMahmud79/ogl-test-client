@@ -18,6 +18,9 @@ A scalable, maintainable Angular application built with TypeScript, following mo
 - [Node.js](https://nodejs.org/)
 - [Angular CLI](https://angular.io/cli)
 
+> **Note:**  
+> <span style="color: yellow;">Update the `googleMapsApiKey` inside the environment file --if it is expired--.</span>
+
 ### Installation
 
 ```bash
