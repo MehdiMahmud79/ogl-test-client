@@ -11,10 +11,11 @@ import { GenericFormDialog } from '../../shared/manager/generic-form-dialog';
 import { ActionMode, Customer, FormDialogData } from '../../shared/models';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-customers',
-  imports: [MatTableModule, MatSortModule, MatButtonModule, MatIconModule, ScrollingModule],
+  imports: [MatTableModule, MatSortModule, MatButtonModule, MatIconModule, ScrollingModule, MatPaginatorModule],
   templateUrl: './customers.html',
   styleUrl: './customers.css',
 })
@@ -27,10 +28,29 @@ export class Customers {
   //#endregion
   public customersListSig = this.customerService.customersSig;
   public displayedColumns: string[] = ['id', 'name', 'street', 'city', 'country', 'postcode', 'actions'];
-  public dataSource = computed(() => new MatTableDataSource(this.customersListSig()));
+  public dataSource!: MatTableDataSource<Customer>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   @ViewChild(MatSort) sort!: MatSort;
+  public ELEMENT_DATA = computed<Customer[]>(() => {
+    let result: any[] = [];
+    this.customersListSig()?.forEach((customer: Customer) => {
+
+
+      result.push({
+        ...customer,
+      });
+    });
+    this.dataSource = new MatTableDataSource(result);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+
+    return result;
+  });
   private _ = effect(() => {
-    this.dataSource().sort = this.sort;
+    if (this.dataSource)
+      this.dataSource.sort = this.sort;
+
   });
   //#region lifecycle hooks
   ngOnInit() {

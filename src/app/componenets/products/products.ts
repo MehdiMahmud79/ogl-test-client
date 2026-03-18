@@ -10,6 +10,7 @@ import { take } from 'rxjs';
 import { maxLength, required, schema } from '@angular/forms/signals';
 import { ActionMode, FormDialogData, Product } from '../../shared/models';
 import { GenericFormDialog } from '../../shared/manager/generic-form-dialog';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 const initialProductModel: Product = {
   id: null,
@@ -34,7 +35,7 @@ const productSchema = schema<Product>((rootPath) => {
 })
 @Component({
   selector: 'app-products',
-  imports: [MatTableModule, MatSortModule, MatButtonModule, MatIconModule],
+  imports: [MatTableModule, MatSortModule, MatButtonModule, MatIconModule, MatPaginatorModule],
   templateUrl: './products.html',
   styleUrl: './products.css',
 })
@@ -46,13 +47,32 @@ export class Products {
   //#endregion
 
   //#region properties
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   public productsListSig = this.productsService.productsSig;
   public displayedColumns: string[] = ['id', 'sku', 'price', 'description'];
-  public dataSource = computed(() => new MatTableDataSource(this.productsListSig()));
+  public dataSource!: MatTableDataSource<Product>;
 
+  public ELEMENT_DATA = computed<Product[]>(() => {
+    let result: any[] = [];
+    this.productsListSig()?.forEach((product: Product) => {
+
+
+      result.push({
+        ...product,
+      });
+    });
+    this.dataSource = new MatTableDataSource(result);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+
+    return result;
+  });
   @ViewChild(MatSort) sort!: MatSort;
   private _ = effect(() => {
-    this.dataSource().sort = this.sort;
+    if (this.dataSource) {
+      this.dataSource.sort = this.sort;
+    }
   });
   //#endregion
 
