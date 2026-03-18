@@ -43,7 +43,6 @@ export class MapTracker {
 
 
   async loadCustomers(customers: Customer[] | string[]) {
-    console.log('Loading customers on map...', customers);
     const results = await Promise.allSettled(
       customers.map(c => this.geo.geocode(typeof c === 'string' ? c : toAddress(c)))
     );
