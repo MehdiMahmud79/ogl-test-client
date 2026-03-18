@@ -12,7 +12,7 @@
     </button>
   </div>
   <app-search-bar class="w-100" [(searchQuery)]="filterSig" (find)="find($event)"></app-search-bar>
-
+  <span class="text-green-400 mx-3">{{ recordNumber() }} Records Found</span>
   <mat-paginator
     [pageSizeOptions]="[20, 50, 100]"
     [pageSize]="pageEvent()?.pageSize ?? 20"

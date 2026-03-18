@@ -33,10 +33,10 @@ export abstract class BaseTableComponent<T> {
   filterSig = signal<string>('');
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  public recordNumber = signal(0);
 
   public data = computed(() => {
     const sourceData = this.sourceSig();
-    const filterValue = this.filterSig().trim().toLowerCase();
 
     this.dataSource.data = sourceData ?? [];
     this.dataSource.paginator = this.paginator;
@@ -86,9 +86,9 @@ export abstract class BaseTableComponent<T> {
   public onAdd?() {
   }
   public find(query: string) {
-    console.log('Finding', query);
     this.filterSig.set(query);
     this.dataSource.filter = query.trim().toLowerCase();
+    this.recordNumber.set(this.dataSource.filteredData.length);
   }
 
 }
