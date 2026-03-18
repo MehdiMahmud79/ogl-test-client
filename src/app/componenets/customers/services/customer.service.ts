@@ -2,6 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { ApiService } from '../../../services/api/api.service';
 import { CityCount, Customer } from '../../../shared/models';
 import { PageEvent } from '@angular/material/paginator';
+import { NotificationService } from '../../../services/notification/notifcation-service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class CustomerService {
 
   //#region service injections
   private readonly apiService = inject(ApiService);
-
+  private readonly notificationService = inject(NotificationService);
   //#endregion
   //#region properties
   public customersSig = signal<Customer[]>([]);
@@ -62,9 +63,18 @@ export class CustomerService {
    */
   public addCustomer(customer: Customer): void {
     // Call the API service to add the customer
-    this.apiService.addCustomer(customer).subscribe((newCustomer) => {
-      // Update the customers signal with the new customer
-      this.customersSig.update((customers) => [...customers, newCustomer as Customer]);
+    this.apiService.addCustomer(customer).subscribe({
+      next: (newCustomer) => {
+        // Update the customers signal with the new customer
+        this.customersSig.update((customers) => [...customers, newCustomer]);
+        // Show a success notification
+        this.notificationService.showSuccess('Customer added successfully', 'Success');
+      },
+      error: (err) => {
+        // Show an error notification
+        this.notificationService.showError('Failed to add customer', err.message);
+        console.error('Error adding customer:', err);
+      },
     });
   }
   /**
@@ -73,11 +83,15 @@ export class CustomerService {
    * @returns void
    */
   public editCustomer(customer: Customer): void {
-    this.apiService.editCustomer(customer).subscribe((updatedCustomer) => {
-      // Update the customers signal with the updated customer
-      this.customersSig.update((customers) =>
-        customers.map((c) => (c.id === updatedCustomer.id ? (updatedCustomer as Customer) : c))
-      );
+    this.apiService.editCustomer(customer).subscribe({
+      next: (editedCustomer) => {
+        this.customersSig.update((customers) => customers.map((c) => (c.id === editedCustomer.id ? editedCustomer : c)));
+        this.notificationService.showSuccess('Customer edited successfully', 'Success');
+      },
+      error: (err) => {
+        this.notificationService.showError('Failed to edit customer', err.message);
+        console.error('Error editing customer:', err);
+      },
     });
   }
 

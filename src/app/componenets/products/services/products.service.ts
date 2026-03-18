@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { ApiService } from '../../../services/api/api.service';
 import { Product } from '../../../shared/models';
 import { PageEvent } from '@angular/material/paginator';
+import { NotificationService } from '../../../services/notification/notifcation-service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,8 @@ export class ProductsService {
 
   //#region service injections
   private readonly apiService = inject(ApiService);
+  private readonly notificationService = inject(NotificationService);
+
   //#endregion
   //#region properties
   public productsSig = signal<Product[]>([]);
@@ -28,9 +31,15 @@ export class ProductsService {
    * @returns void
    */
   public getProducts(): void {
-    this.apiService.getProducts().subscribe((products) => {
-      this.pageEvent.update(pe => (structuredClone({ ...pe, length: products?.length ?? 0 })));
-      this.productsSig.set(structuredClone(products));
+    this.apiService.getProducts().subscribe({
+      next: (products) => {
+        this.pageEvent.update(pe => (structuredClone({ ...pe, length: products?.length ?? 0 })));
+        this.productsSig.set(structuredClone(products));
+      },
+      error: (err) => {
+        this.notificationService.showError('Failed to fetch products', 'Error');
+        console.error('Error fetching products:', err);
+      },
     });
   }
 
@@ -40,8 +49,14 @@ export class ProductsService {
    * @returns void
    */
   public addProduct(product: Product): void {
-    this.apiService.addProduct(product).subscribe((newProduct) => {
-      this.productsSig.update((products) => [...products, structuredClone(newProduct) as Product]);
+    this.apiService.addProduct(product).subscribe({
+      next: (newProduct) => {
+        this.productsSig.update((products) => [...products, structuredClone(newProduct) as Product]);
+        this.notificationService.showSuccess('Product added successfully', 'Success');
+      },
+      error: (err) => {
+        this.notificationService.showError('Failed to add product', err.message);
+      },
     });
   }
   //#endregion
