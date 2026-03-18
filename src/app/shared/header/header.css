@@ -1,5 +1,5 @@
-.active-link {
-  border-bottom: 3px solid #8daada;
+.active-link > div {
+  border-bottom: 3px solid #58e904 !important;
   padding-bottom: 0.25rem;
   font-size: 1.1rem;
   font-weight: 600;
@@ -8,8 +8,11 @@ nav {
   background: linear-gradient(to left, #021b29, #5588ca);
   color: aqua;
   user-select: none;
+
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
-a:hover {
-  color: #7cf6ff;
-  font-size: 1.1rem;
+a *:hover {
+  color: #16b411;
 }

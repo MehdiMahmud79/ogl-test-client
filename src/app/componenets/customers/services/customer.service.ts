@@ -77,16 +77,12 @@ export class CustomerService {
    * @returns void
    */
   public addCustomer(customer: Customer): void {
-    // Call the API service to add the customer
     this.apiService.addCustomer(customer).subscribe({
       next: (newCustomer) => {
-        // Update the customers signal with the new customer
         this.customersSig.update((customers) => [...customers, newCustomer]);
-        // Show a success notification
         this.notificationService.showSuccess('Customer added successfully', 'Success');
       },
       error: (err) => {
-        // Show an error notification
         this.notificationService.showError('Failed to add customer', err.message);
         console.error('Error adding customer:', err);
       },

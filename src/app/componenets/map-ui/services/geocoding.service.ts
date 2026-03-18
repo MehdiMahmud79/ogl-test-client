@@ -1,12 +1,16 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { GoogleMapsLoader } from "./google-map.service";
 
 @Injectable({ providedIn: 'root' })
 export class GeocodingService {
+  private loader: GoogleMapsLoader = inject(GoogleMapsLoader);
   private geocoder?: google.maps.Geocoder;
 
-  constructor(private loader: GoogleMapsLoader) { }
 
+  /**
+   * Method to get the Google Maps Geocoder instance, loading the API if necessary
+   * @returns A promise that resolves to the Google Maps Geocoder instance
+   */
   private async getGeocoder(): Promise<google.maps.Geocoder> {
     if (this.geocoder) return this.geocoder;
 
@@ -16,6 +20,11 @@ export class GeocodingService {
     return this.geocoder;
   }
 
+  /**
+   * Method to geocode an address into latitude and longitude
+   * @param address The address to be geocoded
+   * @returns A promise that resolves to the latitude and longitude of the address
+   */
   async geocode(address: string): Promise<google.maps.LatLngLiteral> {
     const geocoder = await this.getGeocoder();
 
