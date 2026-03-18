@@ -1,9 +1,7 @@
-<div class="map-wrap">
-  <google-map
-    [height]="'100%'"
-    [width]="'100%'"
-    [center]="center()"
-    [zoom]="zoom()"
-    [options]="{ mapTypeId: 'roadmap' }"
-  ></google-map>
-</div>
+@if (ready()) {
+  <google-map height="90%" width="100%" [center]="center()" [zoom]="zoom()">
+    @for (marker of markers(); track marker.position) {
+      <map-marker [position]="marker.position" [label]="marker.label!" />
+    }
+  </google-map>
+}
