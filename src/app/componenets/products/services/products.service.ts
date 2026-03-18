@@ -37,7 +37,7 @@ export class ProductsService {
         this.productsSig.set(structuredClone(products));
       },
       error: (err) => {
-        this.notificationService.showError('Failed to fetch products', 'Error');
+        this.notificationService.showError('Failed to fetch products', err.message);
         console.error('Error fetching products:', err);
       },
     });

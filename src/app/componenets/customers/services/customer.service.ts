@@ -39,10 +39,17 @@ export class CustomerService {
    * @returns void
    */
   public getCustomers(): void {
-    this.apiService.getCustomers().subscribe((customers) => {
-      this.pageEvent.update(pe => (structuredClone({ ...pe, length: customers?.length ?? 0 })));
-      this.customersSig.set(customers);
-    });
+    this.apiService.getCustomers().subscribe(
+      {
+        next: (customers) => {
+          this.customersSig.set(customers);
+        },
+        error: (err) => {
+          this.notificationService.showError('Failed to fetch customers', err.message);
+          console.error('Error fetching customers:', err);
+        },
+      }
+    );
   }
 
   /**
@@ -50,9 +57,17 @@ export class CustomerService {
    * @returns void
    */
   public getCountByCity(): void {
-    this.apiService.getCountByCity().subscribe((counts) => {
-      this.customersByCitySig.set(counts);
-    });
+    this.apiService.getCountByCity().subscribe(
+      {
+        next: (cityCounts) => {
+          this.customersByCitySig.set(cityCounts);
+        },
+        error: (err) => {
+          this.notificationService.showError('Failed to fetch customer counts by city', err.message);
+          console.error('Error fetching customer counts by city:', err);
+        },
+      }
+    );
   }
 
 
@@ -101,8 +116,15 @@ export class CustomerService {
    * @returns void
    */
   public deleteCustomer(customerId: number): void {
-    this.apiService.deleteCustomer(customerId).subscribe(() => {
-      this.customersSig.update((customers) => customers.filter((c) => c.id !== customerId));
+    this.apiService.deleteCustomer(customerId).subscribe({
+      next: () => {
+        this.customersSig.update((customers) => customers.filter((c) => c.id !== customerId));
+        this.notificationService.showSuccess('Customer deleted successfully', 'Success');
+      },
+      error: (err) => {
+        this.notificationService.showError('Failed to delete customer', err.message);
+        console.error('Error deleting customer:', err);
+      },
     });
   }
 
