@@ -1,8 +1,10 @@
 import { Component, ChangeDetectionStrategy, output, ViewChild, ElementRef, AfterContentChecked, model } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInput, MatInputModule } from '@angular/material/input';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-search-bar',
@@ -19,5 +21,14 @@ export class SearchBarComponent implements AfterContentChecked {
   ngAfterContentChecked(): void {
     this.input?.nativeElement?.focus();
   }
+  private queryChange$ = toObservable(this.searchQuery).pipe(
+    debounceTime(500),
+    distinctUntilChanged()
+  );
 
+  ngOnInit() {
+    this.queryChange$.subscribe(value => {
+      this.find.emit(value);
+    });
+  }
 }
