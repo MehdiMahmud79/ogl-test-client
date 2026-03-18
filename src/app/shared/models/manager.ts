@@ -1,3 +1,5 @@
+import { FormOptions, SchemaOrSchemaFn } from "@angular/forms/signals";
+
 export enum ActionMode {
   CREATE = 'create',
   EDIT = 'edit',
@@ -11,6 +13,6 @@ export type FormFieldConfig<T> = {
 export type FormDialogData<T> = {
   model: T;
   mode: ActionMode;
-  formSchema: any;
+  formSchema: SchemaOrSchemaFn<T, any> | FormOptions<T>;
   fields: FormFieldConfig<T>[];
 };

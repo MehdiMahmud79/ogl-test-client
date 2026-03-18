@@ -7,7 +7,13 @@ import {
 
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-
+export interface ConfirmDialogData {
+  title: string;
+  text: string;
+  cancelBtn: boolean;
+  confirmText?: string;
+  cancelText?: string;
+}
 @Component({
   selector: 'app-confirm-dialog',
   templateUrl: './confirm-dialog.component.html',
@@ -20,16 +26,18 @@ export class ConfirmDialogComponent {
   //#region constructor
   public constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData,
   ) {
   }
   //#endregion
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    console.log('ConfirmDialogComponent initialized with data:', this.data);
+  }
   //#region GUI handlers
   public onNoClick(): void {
     this.dialogRef.close({
       success: false,
-      data: this.data.data,
+      data: this.data,
     });
   }
   public onCancelClick(): void {
@@ -41,7 +49,7 @@ export class ConfirmDialogComponent {
   public onYesClick(): void {
     this.dialogRef.close({
       success: true,
-      data: this.data.data,
+      data: this.data,
     });
   }
   //#endregion
