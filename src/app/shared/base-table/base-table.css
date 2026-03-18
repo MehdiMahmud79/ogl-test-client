@@ -6,11 +6,13 @@
   color: rgb(233, 88, 88);
   cursor: pointer;
 }
-/* change odd row background color */
 tr:nth-child(even) {
   background-color: #202020;
 }
-/* change header background color */
+
+tr:nth-child(even):hover {
+  background-color: #615f5f !important;
+}
 th {
   background-color: #021b29 !important;
   color: #7cf6ff;
