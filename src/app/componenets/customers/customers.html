@@ -33,6 +33,39 @@
       </th>
       <td mat-cell *matCellDef="let element">{{ element.name }}</td>
     </ng-container>
+    <!-- Street Column -->
+    <ng-container matColumnDef="street">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by street">
+        Street
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.street }}</td>
+    </ng-container>
+    <!-- City Column -->
+    <ng-container matColumnDef="city">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by city">
+        City
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.city }}</td>
+    </ng-container>
+    <!-- Country Column -->
+    <ng-container matColumnDef="country">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by country">
+        Country
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.country }}</td>
+    </ng-container>
+    <!-- Postcode Column -->
+    <ng-container matColumnDef="postcode">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        sortActionDescription="Sort by postcode"
+      >
+        Postcode
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.postcode }}</td>
+    </ng-container>
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>

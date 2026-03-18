@@ -25,7 +25,7 @@ export class Customers {
   private readonly dialog = inject(MatDialog);
   //#endregion
   public customersListSig = this.customerService.customersSig;
-  public displayedColumns: string[] = ['id', 'name', 'actions'];
+  public displayedColumns: string[] = ['id', 'name', 'street', 'city', 'country', 'postcode', 'actions'];
   public dataSource = computed(() => new MatTableDataSource(this.customersListSig()));
   @ViewChild(MatSort) sort!: MatSort;
   private _ = effect(() => {
