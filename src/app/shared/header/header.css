@@ -1,6 +1,15 @@
 .active-link {
-  border-bottom: 3px solid #3b82f6;
+  border-bottom: 3px solid #8daada;
   padding-bottom: 0.25rem;
   font-size: 1.1rem;
   font-weight: 600;
+}
+nav {
+  background-color: #021b29;
+  color: aqua;
+  user-select: none;
+}
+a:hover {
+  color: #7cf6ff;
+  font-size: 1.1rem;
 }
