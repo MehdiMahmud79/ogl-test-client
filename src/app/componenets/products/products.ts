@@ -1,16 +1,14 @@
-import { Component, computed, effect, inject, ViewChild } from '@angular/core';
+import { Component, computed, inject, signal, WritableSignal } from '@angular/core';
 import { ProductsService } from './services/products.service';
-import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { take } from 'rxjs';
 import { maxLength, required, schema } from '@angular/forms/signals';
-import { ActionMode, FormDialogData, Product } from '../../shared/models';
-import { GenericFormDialog } from '../../shared/manager/generic-form-dialog';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { ActionMode, Product } from '../../shared/models';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { BaseTableComponent } from '../../shared/base-table-component/base-table';
 
 const initialProductModel: Product = {
   id: null,
@@ -36,83 +34,58 @@ const productSchema = schema<Product>((rootPath) => {
 @Component({
   selector: 'app-products',
   imports: [MatTableModule, MatSortModule, MatButtonModule, MatIconModule, MatPaginatorModule],
-  templateUrl: './products.html',
-  styleUrl: './products.css',
+  templateUrl: '../../shared/base-table-component/base-table.html',
+  styleUrls: ['../../shared/base-table-component/base-table.css'],
 })
-export class Products {
+export class Products extends BaseTableComponent<Product> {
   //#region serice injections
   private readonly productsService = inject(ProductsService);
-  private _liveAnnouncer = inject(LiveAnnouncer);
   private readonly dialog = inject(MatDialog);
   //#endregion
 
   //#region properties
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  override pageEvent: WritableSignal<PageEvent> = this.productsService.pageEvent;
 
-  public productsListSig = this.productsService.productsSig;
-  public displayedColumns: string[] = ['id', 'sku', 'price', 'description'];
-  public dataSource!: MatTableDataSource<Product>;
+  override displayedColumns: WritableSignal<{ key: string, label: string }[]> = signal([
+    { key: 'id', label: 'ID' },
+    { key: 'sku', label: 'SKU' },
+    { key: 'price', label: 'Price' },
+    { key: 'description', label: 'Description' }
+  ]);
 
-  public ELEMENT_DATA = computed<Product[]>(() => {
-    let result: any[] = [];
-    this.productsListSig()?.forEach((product: Product) => {
-
-
-      result.push({
-        ...product,
-      });
-    });
-    this.dataSource = new MatTableDataSource(result);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-
-    return result;
+  override sourceSig = computed(() => {
+    const products = this.productsService.productsSig();
+    return structuredClone(products);
   });
-  @ViewChild(MatSort) sort!: MatSort;
-  private _ = effect(() => {
-    if (this.dataSource) {
-      this.dataSource.sort = this.sort;
-    }
-  });
+
+  protected fetch() {
+    this.productsService.getProducts();
+  }
   //#endregion
 
   //#region lifecycle hooks
-  ngOnInit() {
-    this.productsService.getProducts();
+  override ngOnInit() {
+    this.fetch();
   }
 
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
+
   /**
    * Method to add a new product
    * @returns void
    */
-  public addProduct(): void {
-    const dialogRef = this.dialog.open(GenericFormDialog<Product>, {
-      data: {
-        model: initialProductModel,
-        formSchema: productSchema,
-        mode: ActionMode.CREATE,
-        fields: [
-          { key: 'sku', label: 'SKU', type: 'text', placeholder: 'ABC123' },
-          { key: 'price', label: 'Price', type: 'number', placeholder: '0.00' },
-          { key: 'description', label: 'Description', type: 'textarea', placeholder: '' }
-        ]
 
-      } as FormDialogData<Product>,
-      disableClose: true,
-    });
-    dialogRef.afterClosed().pipe(take(1)).subscribe((result) => {
+  override onAdd() {
+    this.openDialog(this.dialog, {
+      model: initialProductModel,
+      formSchema: productSchema,
+      mode: ActionMode.CREATE,
+      fields: [{ key: 'sku', label: 'SKU', type: 'text', placeholder: 'ABC123' },
+      { key: 'price', label: 'Price', type: 'number', placeholder: '0.00' },
+      { key: 'description', label: 'Description', type: 'textarea', placeholder: '' }]
+    }).subscribe(result => {
       if (result?.data) {
         this.productsService.addProduct(result.data);
       }
-
     });
   }
 

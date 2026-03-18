@@ -1,60 +1,57 @@
-import { Component, computed, effect, inject, ViewChild } from '@angular/core';
+import { Component, computed, inject, signal, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { CustomerService } from './services/customer.service';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { take } from 'rxjs';
 import { GenericFormDialog } from '../../shared/manager/generic-form-dialog';
 import { ActionMode, Customer, FormDialogData } from '../../shared/models';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { BaseTableComponent } from '../../shared/base-table-component/base-table';
 
 @Component({
   selector: 'app-customers',
   imports: [MatTableModule, MatSortModule, MatButtonModule, MatIconModule, ScrollingModule, MatPaginatorModule],
-  templateUrl: './customers.html',
-  styleUrl: './customers.css',
+  templateUrl: '../../shared/base-table-component/base-table.html',
+  styleUrls: ['../../shared/base-table-component/base-table.css'],
 })
-export class Customers {
+export class Customers extends BaseTableComponent<Customer> {
 
   //#region serice injections
   private readonly customerService = inject(CustomerService);
-  private _liveAnnouncer = inject(LiveAnnouncer);
   private readonly dialog = inject(MatDialog);
   //#endregion
   public customersListSig = this.customerService.customersSig;
-  public displayedColumns: string[] = ['id', 'name', 'street', 'city', 'country', 'postcode', 'actions'];
-  public dataSource!: MatTableDataSource<Customer>;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  override pageEvent: WritableSignal<PageEvent> = this.customerService.pageEvent;
+  override displayedColumns: WritableSignal<{ key: string, label: string }[]> = signal([
+    { key: 'id', label: 'ID' },
+    { key: 'name', label: 'Name' },
+    { key: 'street', label: 'Street' },
+    { key: 'city', label: 'City' },
+    { key: 'country', label: 'Country' },
+    { key: 'postcode', label: 'Postcode' },
+    { key: 'actions', label: 'Actions' }
+  ]);
 
-  @ViewChild(MatSort) sort!: MatSort;
-  public ELEMENT_DATA = computed<Customer[]>(() => {
-    let result: any[] = [];
-    this.customersListSig()?.forEach((customer: Customer) => {
-
-
-      result.push({
-        ...customer,
-      });
-    });
-    this.dataSource = new MatTableDataSource(result);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-
-    return result;
+  override sourceSig = computed(() => {
+    const customers = this.customerService.customersSig();
+    return structuredClone(customers);
   });
-  private _ = effect(() => {
-    if (this.dataSource)
-      this.dataSource.sort = this.sort;
-
-  });
-  //#region lifecycle hooks
-  ngOnInit() {
+  protected fetch() {
     this.customerService.getCustomers();
+  }
+  /**
+   *
+   */
+
+
+  //#region lifecycle hooks
+  override ngOnInit() {
+    this.fetch();
   }
 
   /**
@@ -63,7 +60,7 @@ export class Customers {
    *  After the dialog is closed, it checks if a new customer was created and adds it to the customer service.
    * @returns void
    */
-  public addCustomer(): void {
+  override onAdd(): void {
     const dialogRef = this.dialog.open(GenericFormDialog<Customer>, {
       data: {
         model: { id: null, name: '', street: '', city: '', country: '', postcode: '' } as Customer,
@@ -96,7 +93,7 @@ export class Customers {
    * It uses the GenericFormDialog component and passes the necessary data for editing the selected customer.
    * After the dialog is closed, it checks if the customer was updated and updates it in the customer service.
    */
-  public editCustomer(customer: Customer): void {
+  override onEdit(customer: Customer): void {
     const dialogRef = this.dialog.open(GenericFormDialog<Customer>, {
       data: {
         model: { ...customer },
@@ -122,12 +119,15 @@ export class Customers {
       }
     });
   }
+  override handlePageEvent(e: PageEvent) {
+    this.customerService.pageEvent.set(e);
+  }
   /**
    * Method to delete a customer. This is a placeholder method and should be implemented to call the appropriate service method to delete the customer.
    * @param customer - The customer to be deleted.
    * @returns void
    */
-  public deleteCustomer(customer: Customer): void {
+  override onDelete(customer: Customer): void {
     this.dialog
       .open(ConfirmDialogComponent, {
         data: {
@@ -144,20 +144,5 @@ export class Customers {
         }
       });
   }
-  /**
-   * Method to announce the change in sort state for assistive technology.
-   * @param sortState - The current state of sorting, which includes the active sort and the direction
-   * (ascending, descending, or none). This method uses the LiveAnnouncer service to announce the sorting
-   * state to assistive technologies, such as screen readers.
-   * If there is an active sort direction, it announces whether the sorting is ascending or descending. If there is no active sort,
-   *  it announces that sorting has been cleared.
-   * @returns void
-   */
-  public announceSortChange(sortState: Sort): void {
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
+
 }

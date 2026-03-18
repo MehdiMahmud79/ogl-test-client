@@ -1,6 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { ApiService } from '../../../services/api/api.service';
 import { Customer } from '../../../shared/models';
+import { PageEvent } from '@angular/material/paginator';
 
 @Injectable({
   providedIn: 'root',
@@ -9,9 +10,15 @@ export class CustomerService {
 
   //#region service injections
   private readonly apiService = inject(ApiService);
+
   //#endregion
   //#region properties
   public customersSig = signal<Customer[]>([]);
+  public pageEvent = signal<PageEvent>({
+    pageIndex: 0,
+    pageSize: 20,
+    length: 1000,
+  });
   public cityListSig = computed(() => {
     const cities = this.customersSig().map(c => c.city);
     return Array.from(new Set(cities));
@@ -25,7 +32,8 @@ export class CustomerService {
    */
   public getCustomers(): void {
     this.apiService.getCustomers().subscribe((customers) => {
-      this.customersSig.set(customers as Customer[]);
+      this.pageEvent.update(pe => (structuredClone({ ...pe, length: customers?.length ?? 0 })));
+      this.customersSig.set(customers);
     });
   }
 

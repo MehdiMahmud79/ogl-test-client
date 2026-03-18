@@ -1,0 +1,64 @@
+<div class="container-mx-auto p-4">
+  <div class="flex items-center justify-between border-b-2 border-gray-300 mb-4">
+    <h1 class="text-3xl text-yellow-600 p-2 m-2">{{ title }}</h1>
+    <button
+      mat-stroked-button
+      color="primary"
+      aria-label="Add new item"
+      class="mb-4"
+      (click)="onAdd?.()"
+    >
+      Add new <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <mat-paginator
+    [pageSizeOptions]="[20, 50, 100]"
+    [pageSize]="pageEvent()?.pageSize ?? 20"
+    [pageIndex]="pageEvent()?.pageIndex ?? 1000"
+    [length]="sourceSig().length"
+    (page)="handlePageEvent($event)"
+    showFirstLastButtons
+  ></mat-paginator>
+
+  @if (data().length) {
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      (matSortChange)="announceSortChange($event)"
+      class="mat-elevation-z8"
+    >
+      @for (column of displayedColumns(); track column.key) {
+        <ng-container [matColumnDef]="column.key">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            sortActionDescription="Sort by number"
+          >
+            {{ column.label }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            @if (column.key === 'actions') {
+              <ng-container>
+                <button mat-icon-button color="primary" (click)="onEdit?.(element)">
+                  <mat-icon class="edit-btn">edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="onDelete?.(element)">
+                  <mat-icon class="delete-btn">delete</mat-icon>
+                </button>
+              </ng-container>
+            } @else {
+              <ng-container>{{ element[column.key] }}</ng-container>
+            }
+          </td>
+        </ng-container>
+      }
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns().map(c => c.key)"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns().map(c => c.key)"></tr>
+    </table>
+  } @else {
+    <div class="text-center text-gray-500">No Data Available</div>
+  }
+</div>
