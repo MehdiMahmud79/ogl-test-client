@@ -11,14 +11,14 @@ import { ActionMode, Customer, FormDialogData } from '../../shared/models';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { BaseTableComponent } from '../../shared/base-table-component/base-table';
-import { SearchBarComponent } from '../../shared/search-bar/search-bar-component';
+import { BaseTableComponent } from '../../shared/base-table/base-table';
+import { SearchBarComponent } from '../../shared/search-bar/search-bar';
 
 @Component({
   selector: 'app-customers',
   imports: [MatTableModule, MatSortModule, SearchBarComponent, MatButtonModule, MatIconModule, ScrollingModule, MatPaginatorModule],
-  templateUrl: '../../shared/base-table-component/base-table.html',
-  styleUrls: ['../../shared/base-table-component/base-table.css'],
+  templateUrl: '../../shared/base-table/base-table.html',
+  styleUrls: ['../../shared/base-table/base-table.css'],
 })
 export class Customers extends BaseTableComponent<Customer> {
 

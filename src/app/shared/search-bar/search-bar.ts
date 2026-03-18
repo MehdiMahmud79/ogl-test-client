@@ -6,8 +6,8 @@ import { MatInput, MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-search-bar',
-  templateUrl: './search-bar.component.html',
-  styleUrls: ['./search-bar.component.css'],
+  templateUrl: './search-bar.html',
+  styleUrls: ['./search-bar.css'],
   imports: [MatInput, MatButtonModule, MatIconModule, MatInputModule, MatButtonModule, ReactiveFormsModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

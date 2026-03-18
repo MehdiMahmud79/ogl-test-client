@@ -1,0 +1,25 @@
+<div class="flex row justify-start items-baseline m-4">
+  <mat-icon> filter_alt</mat-icon
+  ><mat-label class="text-yellow-500 text-xl">{{ title() }} </mat-label>
+
+  <mat-form-field class="mx-2">
+    <input
+      #inputField
+      matInput
+      [matAutocomplete]="auto"
+      [type]="'text'"
+      aria-label="string"
+      [(ngModel)]="value"
+    />
+
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onAutocompleteSelect($event)">
+      @let keyOptions =
+        useAutoComplete() ? (options() | filterOptions: inputField.value) : options();
+      @for (key of keyOptions; track key) {
+        <mat-option [value]="key">
+          {{ key }}
+        </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+</div>

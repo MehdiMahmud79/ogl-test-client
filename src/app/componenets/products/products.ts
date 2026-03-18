@@ -8,8 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { maxLength, required, schema } from '@angular/forms/signals';
 import { ActionMode, Product } from '../../shared/models';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { BaseTableComponent } from '../../shared/base-table-component/base-table';
-import { SearchBarComponent } from '../../shared/search-bar/search-bar-component';
+import { BaseTableComponent } from '../../shared/base-table/base-table';
+import { SearchBarComponent } from '../../shared/search-bar/search-bar';
 
 const initialProductModel: Product = {
   id: null,
@@ -35,8 +35,8 @@ const productSchema = schema<Product>((rootPath) => {
 @Component({
   selector: 'app-products',
   imports: [MatTableModule, MatSortModule, SearchBarComponent, MatButtonModule, MatIconModule, MatPaginatorModule],
-  templateUrl: '../../shared/base-table-component/base-table.html',
-  styleUrls: ['../../shared/base-table-component/base-table.css'],
+  templateUrl: '../../shared/base-table/base-table.html',
+  styleUrls: ['../../shared/base-table/base-table.css'],
 })
 export class Products extends BaseTableComponent<Product> {
   //#region serice injections

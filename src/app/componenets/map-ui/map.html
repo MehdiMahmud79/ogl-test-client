@@ -1,3 +1,18 @@
+<div class="flex justify-start align-center">
+  <select-option
+    [options]="['City', 'Postcode']"
+    [title]="'Filter by'"
+    [(value)]="selectedFilter"
+    (onSelect)="filterValue.set('')"
+  ></select-option>
+  <select-option
+    [options]="selectedFilter() == 'City' ? cityList() : postCodeList()"
+    [title]="selectedFilter() == 'City' ? 'Select City' : 'Select Postcode'"
+    [(value)]="filterValue"
+    [useAutoComplete]="true"
+    (onSelect)="this.filterValue.set($event)"
+  ></select-option>
+</div>
 @if (ready()) {
   <google-map height="90%" width="100%" [center]="center()" [zoom]="zoom()">
     @for (marker of markers(); track marker.position) {

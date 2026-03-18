@@ -11,7 +11,7 @@ import { GenericFormDialog } from "../manager/generic-form-dialog";
 import { take } from "rxjs";
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { CommonModule } from "@angular/common";
-import { SearchBarComponent } from "../search-bar/search-bar-component";
+import { SearchBarComponent } from "../search-bar/search-bar";
 
 @Component({
   selector: 'app-base-table',

@@ -25,6 +25,11 @@ export class CustomerService {
     const cities = this.customersSig().map(c => c.city);
     return Array.from(new Set(cities));
   });
+  public postCodeListSig = computed(() => {
+    const postCodes = this.customersSig().map(c => c.postcode);
+    return Array.from(new Set(postCodes));
+  });
+
   //#endregion
 
   //#region public methods
