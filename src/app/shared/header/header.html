@@ -4,9 +4,33 @@
 
     <!-- add navigation links here -->
     <ul class="flex space-x-4">
-      <li><a routerLink="/products" class="text-slate-800 hover:text-slate-600">Products</a></li>
-      <li><a routerLink="/customers" class="text-slate-800 hover:text-slate-600">Customers</a></li>
-      <li><a routerLink="/map" class="text-slate-800 hover:text-slate-600">Map</a></li>
+      <li>
+        <a
+          routerLink="/products"
+          routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="text-slate-800 hover:text-slate-600"
+          >Products</a
+        >
+      </li>
+      <li>
+        <a
+          routerLink="/customers"
+          routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="text-slate-800 hover:text-slate-600"
+          >Customers</a
+        >
+      </li>
+      <li>
+        <a
+          routerLink="/map"
+          routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="text-slate-800 hover:text-slate-600"
+          >Map</a
+        >
+      </li>
     </ul>
   </div>
 </nav>

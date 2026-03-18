@@ -33,7 +33,7 @@ export class MapTracker {
   readonly zoom = signal(14);
   readonly markers = signal<Marker[]>([]);
   private _ = effect(() => {
-    this.loadCustomers(this.cityList());
+    this.loadCustomers(this.customerService.customersSig());
   });
   async ngOnInit() {
     this.customerService.getCustomers();
@@ -53,7 +53,7 @@ export class MapTracker {
 
         return {
           position: res.value,
-          label: typeof customers[i] === 'string' ? customers[i] : customers[i].city,
+          label: typeof customers[i] === 'string' ? customers[i] : customers[i].name,
         };
       })
       .filter(Boolean) as Marker[];

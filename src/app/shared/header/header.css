@@ -1,0 +1,6 @@
+.active-link {
+  border-bottom: 3px solid #3b82f6;
+  padding-bottom: 0.25rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
