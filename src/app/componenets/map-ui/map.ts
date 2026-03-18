@@ -1,8 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { GoogleMapsLoader } from './services/google-map.service';
 import { GeocodingService } from './services/geocoding.service';
 import { Customer } from '../../shared/models';
+import { CustomerService } from '../customers/services/customer.service';
 
 type Marker = {
   position: google.maps.LatLngLiteral;
@@ -11,10 +12,12 @@ type Marker = {
 function toAddress(c: Customer): string {
   return `${c.street}, ${c.city}, ${c.postcode}, ${c.country}`;
 }
+
 @Component({
   selector: 'app-map',
   standalone: true,
   imports: [GoogleMapsModule],
+  providers: [],
   templateUrl: './map.html',
   styleUrl: './map.css',
 })
@@ -22,32 +25,27 @@ export class MapTracker {
   //#region service injections
   private readonly googleMapsLoader = inject(GoogleMapsLoader);
   private readonly geo = inject(GeocodingService);
+  private readonly customerService = inject(CustomerService);
   //#endregion
   public ready = signal(false);
-
+  public cityList = this.customerService.cityListSig;
   readonly center = signal<google.maps.LatLngLiteral>({ lat: 52.4862, lng: -1.8904 });
   readonly zoom = signal(14);
   readonly markers = signal<Marker[]>([]);
-
+  private _ = effect(() => {
+    this.loadCustomers(this.cityList());
+  });
   async ngOnInit() {
+    this.customerService.getCustomers();
     await this.googleMapsLoader.load();
     this.ready.set(true);
-    this.loadCustomers([
-      {
-        "id": 1,
-        "name": "David Brown",
-        "street": "134 Victoria Street",
-        "city": "Birmingham",
-        "country": "UK",
-        "postcode": "J7 6YD"
-      }
-    ]);
   }
 
 
-  async loadCustomers(customers: Customer[]) {
+  async loadCustomers(customers: Customer[] | string[]) {
+    console.log('Loading customers on map...', customers);
     const results = await Promise.allSettled(
-      customers.map(c => this.geo.geocode(toAddress(c)))
+      customers.map(c => this.geo.geocode(typeof c === 'string' ? c : toAddress(c)))
     );
 
     const markers = results
@@ -56,7 +54,7 @@ export class MapTracker {
 
         return {
           position: res.value,
-          label: customers[i].name,
+          label: typeof customers[i] === 'string' ? customers[i] : customers[i].city,
         };
       })
       .filter(Boolean) as Marker[];
