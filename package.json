@@ -41,10 +41,11 @@
     "@angular/cli": "^21.2.3",
     "@angular/compiler-cli": "^21.2.3",
     "@tailwindcss/postcss": "^4.2.2",
+    "@vitest/browser-playwright": "^4.1.0",
     "jsdom": "^29.0.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.2.2",
     "typescript": "~5.9.2",
-    "vitest": "^4.0.8"
+    "vitest": "^4.1.0"
   }
 }

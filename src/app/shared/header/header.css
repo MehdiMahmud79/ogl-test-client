@@ -5,7 +5,7 @@
   font-weight: 600;
 }
 nav {
-  background-color: #021b29;
+  background: linear-gradient(to left, #021b29, #5588ca);
   color: aqua;
   user-select: none;
 }
