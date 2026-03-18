@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Products } from '../componenets/products/products';
 import { Customers } from '../componenets/customers/customers';
+import { MapTracker } from '../componenets/map-ui/map';
 export const routes: Routes = [
   {
     path: 'products',
@@ -18,6 +19,10 @@ export const routes: Routes = [
     path: '',
     redirectTo: '/products',
     pathMatch: 'full'
+  },
+  {
+    path: 'map',
+    component: MapTracker
   },
   {
     path: '**',

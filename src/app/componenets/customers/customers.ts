@@ -10,10 +10,11 @@ import { take } from 'rxjs';
 import { GenericFormDialog } from '../../shared/manager/generic-form-dialog';
 import { ActionMode, Customer, FormDialogData } from '../../shared/models';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-customers',
-  imports: [MatTableModule, MatSortModule, MatButtonModule, MatIconModule],
+  imports: [MatTableModule, MatSortModule, MatButtonModule, MatIconModule, ScrollingModule],
   templateUrl: './customers.html',
   styleUrl: './customers.css',
 })
