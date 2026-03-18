@@ -15,8 +15,7 @@
     "target": "ES2022",
     "module": "preserve",
     "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
-    "types": ["vitest/globals"]
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

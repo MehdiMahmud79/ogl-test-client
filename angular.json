@@ -67,7 +67,8 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "browsers": ["chromium"]
+            "tsConfig": "tsconfig.spec.json",
+            "runnerConfig": "vitest.config.ts"
           }
         }
       }

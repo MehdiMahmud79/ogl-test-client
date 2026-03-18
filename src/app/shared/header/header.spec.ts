@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { beforeEach, expect, it, describe } from "vitest";
 
 import { Header } from './header';
 
@@ -10,7 +11,7 @@ describe('Header', () => {
     await TestBed.configureTestingModule({
       imports: [Header]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(Header);
     component = fixture.componentInstance;
