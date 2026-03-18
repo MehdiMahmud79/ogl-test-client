@@ -12,8 +12,6 @@
     @for (field of data.fields; track field.key) {
       <mat-form-field class="example-full-width">
         <mat-label>{{ field.label }}</mat-label>
-
-        <!-- Input types -->
         @if (field.type === 'textarea') {
           <textarea
             matInput
@@ -28,8 +26,6 @@
             [formField]="formInstance[field.key]"
           />
         }
-
-        <!-- Errors -->
         @if (formInstance[field.key]().invalid() && formInstance[field.key]().touched()) {
           @for (error of formInstance[field.key]().errors(); track error.kind) {
             <mat-error>{{ error.message }}</mat-error>

@@ -43,7 +43,6 @@ export class CustomerService {
    * @returns void
    */
   public editCustomer(customer: Customer): void {
-    // Call the API service to edit the customer
     this.apiService.editCustomer(customer).subscribe((updatedCustomer) => {
       // Update the customers signal with the updated customer
       this.customersSig.update((customers) =>

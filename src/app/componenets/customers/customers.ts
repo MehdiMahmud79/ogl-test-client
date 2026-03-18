@@ -45,11 +45,15 @@ export class Customers {
   public addCustomer(): void {
     const dialogRef = this.dialog.open(GenericFormDialog<Customer>, {
       data: {
-        model: { id: null, name: '' } as Customer,
+        model: { id: null, name: '', street: '', city: '', country: '', postcode: '' } as Customer,
         mode: ActionMode.CREATE,
         formSchema: {}, // Replace with actual schema
         fields: [
-          { key: 'name', label: 'Customer Name', type: 'text', placeholder: 'Enter name' }
+          { key: 'name', label: 'Customer Name', type: 'text', placeholder: 'Enter name' },
+          { key: 'street', label: 'Street', type: 'text', placeholder: 'Enter street' },
+          { key: 'city', label: 'City', type: 'text', placeholder: 'Enter city' },
+          { key: 'country', label: 'Country', type: 'text', placeholder: 'Enter country' },
+          { key: 'postcode', label: 'Postcode', type: 'text', placeholder: 'Enter postcode' }
         ]
       } as FormDialogData<Customer>,
       width: '900px',
@@ -78,7 +82,11 @@ export class Customers {
         mode: ActionMode.EDIT,
         formSchema: {}, // Replace with actual schema
         fields: [
-          { key: 'name', label: 'Customer Name', type: 'text', placeholder: 'Enter name' }
+          { key: 'name', label: 'Customer Name', type: 'text', placeholder: 'Enter name' },
+          { key: 'street', label: 'Street', type: 'text', placeholder: 'Enter street' },
+          { key: 'city', label: 'City', type: 'text', placeholder: 'Enter city' },
+          { key: 'country', label: 'Country', type: 'text', placeholder: 'Enter country' },
+          { key: 'postcode', label: 'Postcode', type: 'text', placeholder: 'Enter postcode' }
         ]
       } as FormDialogData<Customer>,
       width: '900px',
