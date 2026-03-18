@@ -26,6 +26,8 @@ export class CustomersByCityCountComponent extends BaseTableComponent<Customer> 
   private readonly customerService = inject(CustomerService);
   private readonly dialog = inject(MatDialog);
   //#endregion
+
+  //#region properties
   public customersListSig = this.customerService.customersByCitySig;
   override pageEvent: WritableSignal<PageEvent> = this.customerService.pageEvent;
   override displayedColumns: WritableSignal<{ key: string, label: string }[]> = signal([
@@ -35,11 +37,12 @@ export class CustomersByCityCountComponent extends BaseTableComponent<Customer> 
   override filterSig = this.customerService.filterSig;
   override title = signal<string>('Customers By City Count');
   override hideAddButton: WritableSignal<boolean> = signal(true);
+
   override sourceSig = computed(() => {
     const customers = this.customerService.customersByCitySig();
     return structuredClone(customers);
   });
-
+  //#endregion
   /**
    * Method to fetch the count of customers by city from the customer service and update the corresponding signal.
    * @returns void
@@ -53,9 +56,16 @@ export class CustomersByCityCountComponent extends BaseTableComponent<Customer> 
   override ngOnInit() {
     this.fetch();
   }
+  //#endregion
 
-
-  override handlePageEvent(e: PageEvent) {
+  //#region event handlers
+  /**
+   * Method to handle page events from the paginator. This method updates the page event signal
+   *  in the customer service with the new page event data.
+   * @param e The PageEvent emitted by the paginator when the page changes.
+   * @return void
+   */
+  override handlePageEvent(e: PageEvent): void {
     this.customerService.pageEvent.set(e);
   }
   /**
@@ -80,5 +90,6 @@ export class CustomersByCityCountComponent extends BaseTableComponent<Customer> 
         }
       });
   }
+  //#endregion
 
 }
