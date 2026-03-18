@@ -1,35 +1,34 @@
 import { Routes } from '@angular/router';
-import { Products } from '../componenets/products/products';
-import { Customers } from '../componenets/customers/customers';
-import { MapTracker } from '../componenets/map-ui/map';
-import { CustomersByCityCountComponent } from '../componenets/customers/customers-by-city-count';
+
 export const routes: Routes = [
   {
     path: 'map',
-    component: MapTracker
-  }, {
+    loadComponent: () =>
+      import('../componenets/map-ui/map').then(m => m.MapTracker),
+  },
+  {
     path: 'products',
-    component: Products
+    loadComponent: () =>
+      import('../componenets/products/products').then(m => m.Products),
   },
   {
     path: 'customers',
-    component: Customers
-  }, {
-    path: 'customers-by-city-count',
-    component: CustomersByCityCountComponent
+    loadComponent: () =>
+      import('../componenets/customers/customers').then(m => m.Customers),
   },
-  // {
-  //   path: 'customers',
-  //   loadChildren: () => import('./customer/customer.module').then(m => m.CustomerModule)
-  // },
+  {
+    path: 'customers-by-city-count',
+    loadComponent: () =>
+      import('../componenets/customers/customers-by-city-count')
+        .then(m => m.CustomersByCityCountComponent),
+  },
   {
     path: '',
     redirectTo: '/products',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
-
   {
     path: '**',
-    redirectTo: '/products'
-  }
+    redirectTo: '/products',
+  },
 ];
