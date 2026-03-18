@@ -18,6 +18,8 @@ export class ProductsService {
     pageSize: 20,
     length: 1000,
   });
+  public filterSig = signal<string>('');
+
   //#endregion
 
   //#region public methods

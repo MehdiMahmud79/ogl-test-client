@@ -1,0 +1,27 @@
+<mat-form-field class="w-100">
+  <mat-label class="input">Search</mat-label>
+  <input
+    class="text-info"
+    matInput
+    [(ngModel)]="searchQuery"
+    tabindex="0"
+    #inputElement
+    (keyup)="find.emit(inputElement.value)"
+  />
+
+  <div class="d-flex justify-content-end" matSuffix>
+    @if (inputElement.value) {
+      <button
+        mat-button
+        padding="10px 5px"
+        color="text-danger"
+        (click)="searchQuery.set(''); find.emit('')"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+    <button mat-button [disabled]="true" padding="10px 5px" color="text-success">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+</mat-form-field>

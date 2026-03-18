@@ -9,6 +9,7 @@ import { maxLength, required, schema } from '@angular/forms/signals';
 import { ActionMode, Product } from '../../shared/models';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { BaseTableComponent } from '../../shared/base-table-component/base-table';
+import { SearchBarComponent } from '../../shared/search-bar/search-bar-component';
 
 const initialProductModel: Product = {
   id: null,
@@ -33,7 +34,7 @@ const productSchema = schema<Product>((rootPath) => {
 })
 @Component({
   selector: 'app-products',
-  imports: [MatTableModule, MatSortModule, MatButtonModule, MatIconModule, MatPaginatorModule],
+  imports: [MatTableModule, MatSortModule, SearchBarComponent, MatButtonModule, MatIconModule, MatPaginatorModule],
   templateUrl: '../../shared/base-table-component/base-table.html',
   styleUrls: ['../../shared/base-table-component/base-table.css'],
 })
@@ -52,6 +53,7 @@ export class Products extends BaseTableComponent<Product> {
     { key: 'price', label: 'Price' },
     { key: 'description', label: 'Description' }
   ]);
+  override filterSig = this.productsService.filterSig;
 
   override sourceSig = computed(() => {
     const products = this.productsService.productsSig();

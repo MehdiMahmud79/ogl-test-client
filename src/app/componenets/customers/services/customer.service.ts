@@ -19,6 +19,8 @@ export class CustomerService {
     pageSize: 20,
     length: 1000,
   });
+  public filterSig = signal<string>('');
+
   public cityListSig = computed(() => {
     const cities = this.customersSig().map(c => c.city);
     return Array.from(new Set(cities));

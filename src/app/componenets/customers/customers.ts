@@ -12,10 +12,11 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { BaseTableComponent } from '../../shared/base-table-component/base-table';
+import { SearchBarComponent } from '../../shared/search-bar/search-bar-component';
 
 @Component({
   selector: 'app-customers',
-  imports: [MatTableModule, MatSortModule, MatButtonModule, MatIconModule, ScrollingModule, MatPaginatorModule],
+  imports: [MatTableModule, MatSortModule, SearchBarComponent, MatButtonModule, MatIconModule, ScrollingModule, MatPaginatorModule],
   templateUrl: '../../shared/base-table-component/base-table.html',
   styleUrls: ['../../shared/base-table-component/base-table.css'],
 })
@@ -36,7 +37,7 @@ export class Customers extends BaseTableComponent<Customer> {
     { key: 'postcode', label: 'Postcode' },
     { key: 'actions', label: 'Actions' }
   ]);
-
+  override filterSig = this.customerService.filterSig;
   override sourceSig = computed(() => {
     const customers = this.customerService.customersSig();
     return structuredClone(customers);

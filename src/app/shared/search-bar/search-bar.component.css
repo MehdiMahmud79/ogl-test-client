@@ -1,0 +1,11 @@
+:host {
+  width: 60% !important;
+}
+.title {
+  color: rgb(223, 208, 0);
+  width: 100%;
+  border-bottom: 1px solid rgba(129, 129, 129, 0.342);
+}
+.input {
+  color: rgb(150, 204, 0);
+}

@@ -1,5 +1,5 @@
 import { ScrollingModule } from "@angular/cdk/scrolling";
-import { Component, computed, effect, inject, Input, Output, signal, ViewChild } from "@angular/core";
+import { Component, computed, effect, inject, signal, ViewChild } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialog } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
@@ -11,10 +11,11 @@ import { GenericFormDialog } from "../manager/generic-form-dialog";
 import { take } from "rxjs";
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { CommonModule } from "@angular/common";
+import { SearchBarComponent } from "../search-bar/search-bar-component";
 
 @Component({
   selector: 'app-base-table',
-  imports: [MatTableModule, CommonModule, MatSortModule, MatButtonModule, MatIconModule, ScrollingModule, MatPaginatorModule],
+  imports: [MatTableModule, CommonModule, SearchBarComponent, MatSortModule, MatButtonModule, MatIconModule, ScrollingModule, MatPaginatorModule],
   templateUrl: './base-table.html',
   styleUrls: ['./base-table.css'],
 })
@@ -29,12 +30,13 @@ export abstract class BaseTableComponent<T> {
   pageEvent = signal<PageEvent | null>(null);
   pageSizeOptions = [20, 50, 100];
   defaultPageSize = 20;
-
+  filterSig = signal<string>('');
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   public data = computed(() => {
-    const sourceData = [...this.sourceSig()];
+    const sourceData = this.sourceSig();
+    const filterValue = this.filterSig().trim().toLowerCase();
 
     this.dataSource.data = sourceData ?? [];
     this.dataSource.paginator = this.paginator;
@@ -82,6 +84,11 @@ export abstract class BaseTableComponent<T> {
 
   }
   public onAdd?() {
+  }
+  public find(query: string) {
+    console.log('Finding', query);
+    this.filterSig.set(query);
+    this.dataSource.filter = query.trim().toLowerCase();
   }
 
 }
