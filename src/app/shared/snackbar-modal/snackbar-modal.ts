@@ -12,8 +12,8 @@ import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 })
 
 export class SnackbarModal {
+  //#region service injections
   snackBarRef = inject(MatSnackBarRef);
   data = inject(MAT_SNACK_BAR_DATA);
-
-
+  //#endregion
 }

@@ -5,10 +5,10 @@
   </div>
   <div mat-dialog-actions>
     <button mat-stroked-button (click)="onYesClick()">
-      {{ data?.confirmText ? data?.confirmText : 'Yes' }}
+      {{ data['confirmText'] ? data['confirmText'] : 'Yes' }}
     </button>
     <button mat-stroked-button (click)="onNoClick()" cdkFocusInitial>
-      {{ data?.cancelText ? data?.cancelText : 'No' }}
+      {{ data['cancelText'] ? data['cancelText'] : 'No' }}
     </button>
 
     @if (data?.cancelBtn) {

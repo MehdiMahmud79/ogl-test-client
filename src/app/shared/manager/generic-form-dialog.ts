@@ -19,18 +19,29 @@ import { NotificationService } from '../../services/notification/notifcation-ser
   styleUrls: ['./generic-form-dialog.css'],
 })
 export class GenericFormDialog<T> {
-
+  // #region service injections
   readonly dialogRef = inject(MatDialogRef<GenericFormDialog<T>>);
   private notificationService = inject(NotificationService);
+  //#endregion
 
+  // #region properties
   public modelSig!: ReturnType<typeof signal<T>>;
   public formInstance: any;
+  //#endregion
 
+  //#region constructor
   constructor(@Inject(MAT_DIALOG_DATA) public data: FormDialogData<T>) {
     this.modelSig = signal<T>({ ...data.model });
     this.formInstance = form(this.modelSig, data.formSchema);
   }
+  //#endregion
 
+  //#region public methods
+
+  /**
+   * Method to handle form submission. It checks if the form is valid and then closes the dialog,
+   *  passing the form data back to the caller. If the form is invalid, it shows an error notification.
+   */
   public onSubmit(): void {
     if (this.formInstance().valid()) {
       this.dialogRef.close({
@@ -41,7 +52,11 @@ export class GenericFormDialog<T> {
     }
   }
 
+  /**
+   * Method to close the form dialog without submitting. It simply closes the dialog and returns null data.
+   */
   public closeForm(): void {
     this.dialogRef.close({ data: null });
   }
+  //#endregion
 }

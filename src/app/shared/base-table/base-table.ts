@@ -20,8 +20,11 @@ import { SearchBarComponent } from "../search-bar/search-bar";
   styleUrls: ['./base-table.css'],
 })
 export abstract class BaseTableComponent<T> {
-
+  //#region service injections
   private _liveAnnouncer = inject(LiveAnnouncer);
+  //#endregion
+
+  //#region properties
   public sourceSig: any;
   protected abstract fetch(): void;
   public dataSource = new MatTableDataSource<T>();
@@ -31,31 +34,44 @@ export abstract class BaseTableComponent<T> {
   pageSizeOptions = [20, 50, 100];
   defaultPageSize = 20;
   filterSig = signal<string>('');
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   public recordNumber = signal(0);
-
+  //#endregion
+  //#region computed signals
   public data = computed(() => {
     const sourceData = this.sourceSig();
-
     this.dataSource.data = sourceData ?? [];
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     return sourceData;
   });
+
   private _ = effect(() => {
     this.dataSource.data = this.sourceSig() || [];
     if (this.sort) {
       this.dataSource.sort = this.sort;
     }
   });
+  //#endregion
 
+  //#region lifecycle hooks
 
   ngOnInit() {
     this.fetch();
   }
-  handlePageEvent(e: PageEvent) {
-  }
+  //#endregion
+
+  //#region GUI handlers
+  /**
+   * Method to handle page events from the paginator.
+   *  This method can be overridden by subclasses to implement specific pagination logic.
+   * @param e The PageEvent emitted by the paginator when the page changes.
+   */
+  public handlePageEvent(e: PageEvent): void { }
+  //#endregion
+
   protected openDialog<T>(
     dialog: MatDialog,
     config: FormDialogData<T>
@@ -68,6 +84,13 @@ export abstract class BaseTableComponent<T> {
       .afterClosed()
       .pipe(take(1));
   }
+
+  /**
+   * Method to announce sort changes for accessibility.
+   *  This method uses the LiveAnnouncer service to announce the current sort state to assistive technologies.
+   *  It also updates the data source's sort property to ensure that the sorting is applied to the table.
+   * @param sortState
+   */
   public announceSortChange(sortState: Sort): void {
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
@@ -78,17 +101,32 @@ export abstract class BaseTableComponent<T> {
       this.dataSource.sort = this.sort;
     }
   }
-  public onDelete?(element: T) {
-  }
-  public onEdit?(element: T) {
 
-  }
-  public onAdd?() {
-  }
-  public find(query: string) {
+  /**
+   * Method to handle deletion of an element. This method can be overridden by subclasses to implement specific deletion logic.
+   * @param element The element to be deleted.
+   */
+  public onDelete?(element: T): void { }
+  /**
+   * Method to handle editing of an element. This method can be overridden by subclasses to implement specific editing logic.
+   * @param element The element to be edited.
+   */
+  public onEdit?(element: T): void { }
+  /**
+   * Method to handle adding a new element. This method can be overridden by subclasses to implement specific adding logic.
+   */
+  public onAdd?(): void { }
+
+  /**
+   * Method to handle search queries. This method updates the filter signal and applies the filter to the data source.
+   * @param query The search query entered by the user. This query is used to filter the data in the
+   *  table based on the specified criteria.
+   */
+  public find(query: string): void {
     this.filterSig.set(query);
     this.dataSource.filter = query.trim().toLowerCase();
     this.recordNumber.set(this.dataSource.filteredData.length);
   }
+  //#endregion
 
 }

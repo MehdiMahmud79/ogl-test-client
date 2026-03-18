@@ -14,21 +14,26 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchBarComponent implements AfterContentChecked {
+  //#region properties
   public searchQuery = model<string>('');
   public find = output<string>();
   public icon = 'search';
   @ViewChild('input', { static: false }) input!: ElementRef<HTMLInputElement>;
-  ngAfterContentChecked(): void {
-    this.input?.nativeElement?.focus();
-  }
   private queryChange$ = toObservable(this.searchQuery).pipe(
     debounceTime(500),
     distinctUntilChanged()
   );
+  //#endregion
+
+  //#region lifecycle hooks
+  ngAfterContentChecked(): void {
+    this.input?.nativeElement?.focus();
+  }
 
   ngOnInit() {
     this.queryChange$.subscribe(value => {
       this.find.emit(value);
     });
   }
+  //#endregion
 }

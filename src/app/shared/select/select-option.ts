@@ -21,16 +21,16 @@ export type SelectEvent = {
 export class SelectOption {
   //#region Inputs and Outputs
   public title = input.required<string>();
-  public onSelect = output<string>();
   public options = model<(string | number)[]>([]);
   public value = model<string | number>('');
   public useAutoComplete = input(false);
+  public onSelect = output<string>();
   //#endregion
 
+  //#region public methods
   /**
    * Method to emit the eventon selecting the text field item
    * @param value value of the input field
-   * @param item text field item
    * @returns void
    */
   public onSelectFromInput(value: string): void {
@@ -44,4 +44,5 @@ export class SelectOption {
   public onAutocompleteSelect($event: MatAutocompleteSelectedEvent): void {
     this.onSelectFromInput($event.option.value);
   }
+  //#endregion
 }
