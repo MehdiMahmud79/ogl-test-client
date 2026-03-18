@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Products } from '../componenets/products/products';
 import { Customers } from '../componenets/customers/customers';
 import { MapTracker } from '../componenets/map-ui/map';
+import { CustomersByCityCountComponent } from '../componenets/customers/customers-by-city-count';
 export const routes: Routes = [
   {
     path: 'map',
@@ -13,6 +14,9 @@ export const routes: Routes = [
   {
     path: 'customers',
     component: Customers
+  }, {
+    path: 'customers-by-city-count',
+    component: CustomersByCityCountComponent
   },
   // {
   //   path: 'customers',

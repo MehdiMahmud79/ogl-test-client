@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { Customer, Product } from '../../shared/models';
+import { CityCount, Customer, Product } from '../../shared/models';
 
 @Injectable({
   providedIn: 'root',
@@ -79,5 +79,15 @@ export class ApiService {
     const url = `${this.apiUrl}/customer/${customerId}`;
     return this.httpClient.delete<void>(url, { responseType: 'json' });
   }
+
+  /**
+   * Method to get count by city
+   * @returns An observable of an object where keys are city names and values are counts of customers in those cities
+   */
+  public getCountByCity(): Observable<CityCount[]> {
+    const url = `${this.apiUrl}/customer/count-by-city`;
+    return this.httpClient.get<CityCount[]>(url, { responseType: 'json' });
+  }
+
   //#endregion
 }

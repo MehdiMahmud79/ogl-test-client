@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { ApiService } from '../../../services/api/api.service';
-import { Customer } from '../../../shared/models';
+import { CityCount, Customer } from '../../../shared/models';
 import { PageEvent } from '@angular/material/paginator';
 
 @Injectable({
@@ -14,13 +14,13 @@ export class CustomerService {
   //#endregion
   //#region properties
   public customersSig = signal<Customer[]>([]);
+  public customersByCitySig = signal<CityCount[]>([]);
   public pageEvent = signal<PageEvent>({
     pageIndex: 0,
     pageSize: 20,
     length: 1000,
   });
   public filterSig = signal<string>('');
-
   public cityListSig = computed(() => {
     const cities = this.customersSig().map(c => c.city);
     return Array.from(new Set(cities));
@@ -43,6 +43,17 @@ export class CustomerService {
       this.customersSig.set(customers);
     });
   }
+
+  /**
+   * Method to get count of customers by city
+   * @returns void
+   */
+  public getCountByCity(): void {
+    this.apiService.getCountByCity().subscribe((counts) => {
+      this.customersByCitySig.set(counts);
+    });
+  }
+
 
   /**
    * Method to add a new customer

@@ -38,6 +38,7 @@ export class Customers extends BaseTableComponent<Customer> {
     { key: 'actions', label: 'Actions' }
   ]);
   override filterSig = this.customerService.filterSig;
+  override title = signal<string>('Customers');
   override sourceSig = computed(() => {
     const customers = this.customerService.customersSig();
     return structuredClone(customers);

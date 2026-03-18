@@ -7,3 +7,8 @@ export type Customer = {
   postcode: string;
 
 }
+
+export type CityCount = {
+  city: string;
+  count: number;
+}

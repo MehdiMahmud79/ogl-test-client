@@ -46,6 +46,7 @@ export class Products extends BaseTableComponent<Product> {
 
   //#region properties
   override pageEvent: WritableSignal<PageEvent> = this.productsService.pageEvent;
+  override title = signal<string>('Products');
 
   override displayedColumns: WritableSignal<{ key: string, label: string }[]> = signal([
     { key: 'id', label: 'ID' },

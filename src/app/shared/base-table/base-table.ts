@@ -28,13 +28,13 @@ export abstract class BaseTableComponent<T> {
   public sourceSig: any;
   protected abstract fetch(): void;
   public dataSource = new MatTableDataSource<T>();
-  title = '';
-  displayedColumns = signal<{ key: string, label: string }[]>([]);
-  pageEvent = signal<PageEvent | null>(null);
-  pageSizeOptions = [20, 50, 100];
-  defaultPageSize = 20;
-  filterSig = signal<string>('');
-
+  public title = signal<string>('Base Table');
+  public displayedColumns = signal<{ key: string, label: string }[]>([]);
+  public pageEvent = signal<PageEvent | null>(null);
+  public pageSizeOptions = [20, 50, 100];
+  public defaultPageSize = 20;
+  public filterSig = signal<string>('');
+  public hideAddButton = signal<boolean>(false);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   public recordNumber = signal(0);
