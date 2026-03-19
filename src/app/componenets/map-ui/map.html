@@ -2,15 +2,15 @@
   <select-option
     [options]="['City', 'Postcode']"
     [title]="'Filter by'"
-    [(value)]="selectedFilter"
-    (onSelect)="filterValue.set('')"
+    [(value)]="filterBy"
+    (onSelect)="cityOrPostcode.set('')"
   ></select-option>
   <select-option
-    [options]="selectedFilter() == 'City' ? cityList() : postCodeList()"
-    [title]="selectedFilter() == 'City' ? 'Select City' : 'Select Postcode'"
-    [(value)]="filterValue"
+    [options]="filterBy() == 'City' ? cityList() : postCodeList()"
+    [title]="filterBy() == 'City' ? 'Select City' : 'Select Postcode'"
+    [(value)]="cityOrPostcode"
     [useAutoComplete]="true"
-    (onSelect)="this.filterValue.set($event)"
+    (onSelect)="this.cityOrPostcode.set($event)"
   ></select-option>
 </div>
 @defer (on timer(1000ms)) {

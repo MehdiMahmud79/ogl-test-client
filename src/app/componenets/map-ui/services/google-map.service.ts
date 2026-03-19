@@ -21,7 +21,8 @@ function toAddress(c: Customer): string {
 export class GoogleMapsLoader {
   private geocoder?: google.maps.Geocoder;
   private loadingPromise?: Promise<void>;
-  private cache: Map<string, google.maps.LatLngLiteral> = new Map();
+  public cache: Map<string, google.maps.LatLngLiteral> = new Map();
+
   readonly markers = signal<Marker[]>([]);
 
   public async load(): Promise<void> {
@@ -51,13 +52,17 @@ export class GoogleMapsLoader {
   private async getGeocoder(): Promise<google.maps.Geocoder> {
     if (this.geocoder) return this.geocoder;
 
-    await this.load(); // guarantees google exists
+    await this.load();
     this.geocoder = new google.maps.Geocoder();
     return this.geocoder;
   }
-
+  /**
+   * Method to geocode an address using the Google Maps Geocoding API. It first checks if the address is already cached, and if not, it performs geocoding and caches the result for future use. Additionally, it dynamically stores the city name and its corresponding coordinates in the cache for quick access.
+   * @param address The address to be geocoded, which can be a full address or a city name.
+   * @returns A promise that resolves to the latitude and longitude of the geocoded address as a google.maps.LatLngLiteral object.
+   */
   async geocode(address: string): Promise<google.maps.LatLngLiteral> {
-    // Check if the address is in cache
+    // Check if the address is already in the cache
     if (this.cache.has(address)) {
       return this.cache.get(address)!;
     }
@@ -70,8 +75,14 @@ export class GoogleMapsLoader {
           const loc = results[0].geometry.location;
           const latLng: google.maps.LatLngLiteral = { lat: loc.lat(), lng: loc.lng() };
 
-          // Cache the result for future use
+          // Cache the geocoded address for future use
           this.cache.set(address, latLng);
+
+          // Dynamically store the city name and coordinates in the cache
+          const cityName = address.split(',')[0].trim(); // Assuming city is the first part of the address
+          if (!this.cache.has(cityName)) {
+            this.cache.set(cityName, latLng);  // Cache city name if it's not already cached
+          }
 
           resolve(latLng);
         } else {
@@ -81,7 +92,13 @@ export class GoogleMapsLoader {
     });
   }
 
-  async loadCustomers(customers: Customer[], selectedFilter: 'City' | 'Postcode', filterValue: string) {
+  /**
+   * Method to load customers and update the map based on the selected filter (city or postcode) and the corresponding value. It filters the customers based on the selected criteria, geocodes their addresses, and updates the markers on the map accordingly.
+   * @param customers An array of Customer objects to be loaded and displayed on the map.
+   * @param selectedFilter The filter criteria, which can be either 'City' or 'Postcode', used to determine how to filter the customers.
+   * @param filterValue The value corresponding to the selected filter (e.g., a specific city name or postcode) used to filter the customers before geocoding and displaying them on the map.
+   */
+  async loadCustomers(customers: Customer[], selectedFilter: 'City' | 'Postcode', filterValue: string): Promise<void> {
     let filteredCustomers: Customer[] = [];
     if (selectedFilter === 'City') {
       filteredCustomers = customers.filter((c: Customer) => c.city.includes(filterValue));
