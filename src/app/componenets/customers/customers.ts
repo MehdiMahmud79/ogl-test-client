@@ -43,18 +43,13 @@ export class Customers extends BaseTableComponent<Customer> {
     const customers = this.customerService.customersSig();
     return structuredClone(customers);
   });
-  protected fetch() {
-    this.customerService.getCustomers();
-  }
+
   /**
    *
    */
 
 
   //#region lifecycle hooks
-  override ngOnInit() {
-    this.fetch();
-  }
 
   /**
    * Method to open a dialog for adding a new customer.

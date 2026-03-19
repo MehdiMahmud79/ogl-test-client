@@ -24,7 +24,13 @@ export class ProductsService {
   public filterSig = signal<string>('');
 
   //#endregion
+  /**
+   *
+   */
+  constructor() {
+    this.getProducts();
 
+  }
   //#region public methods
   /**
    * Method to get all products

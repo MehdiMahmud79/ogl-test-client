@@ -13,10 +13,16 @@
     (onSelect)="this.filterValue.set($event)"
   ></select-option>
 </div>
-@if (ready()) {
-  <google-map height="90%" width="100%" [center]="center()" [zoom]="zoom()">
-    @for (marker of markers(); track marker.position) {
-      <map-marker [position]="marker.position" [label]="marker.label!" />
-    }
-  </google-map>
+@defer (on timer(1000ms)) {
+  @if (ready()) {
+    <google-map height="90%" width="100%" [center]="center()" [zoom]="zoom()">
+      @for (marker of markers(); track marker.position) {
+        <map-marker [position]="marker.position" [label]="marker.label!" />
+      }
+    </google-map>
+  }
+} @placeholder {
+  <div class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
 }

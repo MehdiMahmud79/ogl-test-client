@@ -47,15 +47,9 @@ export class CustomersByCityCountComponent extends BaseTableComponent<Customer> 
    * Method to fetch the count of customers by city from the customer service and update the corresponding signal.
    * @returns void
    */
-  protected fetch(): void {
-    this.customerService.getCountByCity();
-  }
 
 
   //#region lifecycle hooks
-  override ngOnInit() {
-    this.fetch();
-  }
   //#endregion
 
   //#region event handlers

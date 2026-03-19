@@ -32,7 +32,13 @@ export class CustomerService {
   });
 
   //#endregion
-
+  /**
+   *
+   */
+  constructor() {
+    this.getCustomers();
+    this.getCountByCity();
+  }
   //#region public methods
   /**
    * Method to get all customers

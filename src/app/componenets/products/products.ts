@@ -61,16 +61,6 @@ export class Products extends BaseTableComponent<Product> {
     return structuredClone(products);
   });
 
-  protected fetch() {
-    this.productsService.getProducts();
-  }
-  //#endregion
-
-  //#region lifecycle hooks
-  override ngOnInit() {
-    this.fetch();
-  }
-
 
   /**
    * Method to add a new product

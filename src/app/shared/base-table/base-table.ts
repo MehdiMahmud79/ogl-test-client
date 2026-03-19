@@ -26,7 +26,6 @@ export abstract class BaseTableComponent<T> {
 
   //#region properties
   public sourceSig: any;
-  protected abstract fetch(): void;
   public dataSource = new MatTableDataSource<T>();
   public title = signal<string>('Base Table');
   public displayedColumns = signal<{ key: string, label: string }[]>([]);
@@ -58,9 +57,6 @@ export abstract class BaseTableComponent<T> {
 
   //#region lifecycle hooks
 
-  ngOnInit() {
-    this.fetch();
-  }
   //#endregion
 
   //#region GUI handlers
