@@ -20,6 +20,7 @@ export class MapTracker {
   private readonly customerService = inject(CustomerService);
   //#endregion
 
+  //#region properties
   public markers = this.googleMapsLoader.markers;
   public filterBy = signal<'City' | 'Postcode'>('City');
   public cityOrPostcode = signal('');
@@ -30,7 +31,9 @@ export class MapTracker {
 
   readonly center = signal<google.maps.LatLngLiteral>({ lat: 52.4862, lng: -1.8904 });  // Default to Nottingham
   readonly zoom = signal(14);
+  //#endregion
 
+  //#region constructor and lifecycle
 
   constructor() {
     // Effect to load filtered customers and update the map based on city/postcode selection
@@ -48,7 +51,9 @@ export class MapTracker {
     await this.googleMapsLoader.load();
     this.ready.set(true);
   }
+  //#endregion
 
+  //#region methods
   /**
    * Method to load customers and update the map based on the selected filter (city or postcode) and the corresponding value.
    * It filters the customers based on the selected criteria, geocodes their addresses, and updates the markers on the map accordingly.
@@ -72,7 +77,15 @@ export class MapTracker {
    */
   private async updateMapCenterAndZoom() {
     const filterValue = this.cityOrPostcode();
+    console.log('Filter Value:', filterValue); // Log the filter value to confirm
 
+    // If filter is empty, do nothing (return early)
+    if (!filterValue) {
+      console.log('Filter is empty, no map changes.');
+      return;
+    }
+
+    // If filter is set to 'City'
     if (this.filterBy() === 'City') {
       const cityCoordinates = this.googleMapsLoader.cache.get(filterValue);
       if (cityCoordinates) {
@@ -81,6 +94,7 @@ export class MapTracker {
       } else {
         try {
           const geocodeResult = await this.googleMapsLoader.geocode(filterValue);
+          console.log('City Geocode Result:', geocodeResult);
           this.center.set(geocodeResult);
           this.zoom.set(12);
         } catch (error) {
@@ -88,16 +102,28 @@ export class MapTracker {
         }
       }
     } else if (this.filterBy() === 'Postcode') {
-      console.log('Postcode filter selected, but geocoding is not implemented for postcodes yet.');
-      if (filterValue) {
-        this.zoom.set(14);
-        try {
-          const postcodeCoordinates = await this.googleMapsLoader.geocode(filterValue);
-          this.center.set(postcodeCoordinates);
-        } catch (error) {
-          console.error('Postcode geocoding failed:', error);
+      try {
+        this.zoom.set(14);  // Set zoom for postcode
+
+        const postcodeCoordinates = await this.googleMapsLoader.geocode(filterValue);
+        console.log('Postcode Geocode Result:', postcodeCoordinates);
+
+        if (postcodeCoordinates) {
+          this.center.set(postcodeCoordinates);  // Set the center if valid coordinates are found
+        } else {
+          console.warn('Postcode geocoding failed, falling back to city...');
+          // Fallback: try a known city (e.g., Nottingham or another nearby city)
+          const fallbackCoordinates = await this.googleMapsLoader.geocode('Nottingham, United Kingdom');
+          console.log('Fallback Geocode Result:', fallbackCoordinates);
+          if (fallbackCoordinates) {
+            this.center.set(fallbackCoordinates);
+            this.zoom.set(12);  // Zoom out to city level
+          }
         }
+      } catch (error) {
+        console.error('Postcode geocoding failed:', error);
       }
     }
   }
+  //#endregion
 }

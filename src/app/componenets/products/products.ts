@@ -46,16 +46,14 @@ export class Products extends BaseTableComponent<Product> {
 
   //#region properties
   override pageEvent: WritableSignal<PageEvent> = this.productsService.pageEvent;
-  override title = signal<string>('Products');
-
   override displayedColumns: WritableSignal<{ key: string, label: string }[]> = signal([
     { key: 'id', label: 'ID' },
     { key: 'sku', label: 'SKU' },
     { key: 'price', label: 'Price' },
     { key: 'description', label: 'Description' }
   ]);
+  override title = signal<string>('Products');
   override filterSig = this.productsService.filterSig;
-
   override sourceSig = computed(() => {
     const products = this.productsService.productsSig();
     return structuredClone(products);

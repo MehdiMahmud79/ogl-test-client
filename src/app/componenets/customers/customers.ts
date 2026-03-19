@@ -37,20 +37,16 @@ export class Customers extends BaseTableComponent<Customer> {
     { key: 'postcode', label: 'Postcode' },
     { key: 'actions', label: 'Actions' }
   ]);
-  override filterSig = this.customerService.filterSig;
   override title = signal<string>('Customers');
+  override filterSig = this.customerService.filterSig;
   override sourceSig = computed(() => {
     const customers = this.customerService.customersSig();
     return structuredClone(customers);
   });
 
-  /**
-   *
-   */
-
-
-  //#region lifecycle hooks
-
+  ngOnInit() {
+    this.customerService.getCustomers();
+  }
   /**
    * Method to open a dialog for adding a new customer.
    *  It uses the GenericFormDialog component and passes the necessary data for creating a new customer.

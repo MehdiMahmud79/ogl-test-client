@@ -48,7 +48,7 @@ export class CustomerService {
     this.apiService.getCustomers().subscribe(
       {
         next: (customers) => {
-          this.customersSig.set(customers);
+          this.customersSig.set(structuredClone(customers));
         },
         error: (err) => {
           this.notificationService.showError('Failed to fetch customers', err.message);
@@ -66,7 +66,7 @@ export class CustomerService {
     this.apiService.getCountByCity().subscribe(
       {
         next: (cityCounts) => {
-          this.customersByCitySig.set(cityCounts);
+          this.customersByCitySig.set(structuredClone(cityCounts));
         },
         error: (err) => {
           this.notificationService.showError('Failed to fetch customer counts by city', err.message);
