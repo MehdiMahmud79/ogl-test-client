@@ -62,30 +62,32 @@ export class GoogleMapsLoader {
    * @returns A promise that resolves to the latitude and longitude of the geocoded address as a google.maps.LatLngLiteral object.
    */
   async geocode(address: string): Promise<google.maps.LatLngLiteral> {
-    // Check if the address is already in the cache
-    if (this.cache.has(address)) {
-      return this.cache.get(address)!;
+    // Sanitize by removing spaces and trimming to the first part of the postcode (e.g., first 3 characters)
+    const sanitizedAddress = address.replace(/\s+/g, '').slice(0, 5); // Trims the postcode to first 5 characters (e.g., "H04GX" to "H04G")
+
+    // Add the country (for UK)
+    const fullAddress = `${sanitizedAddress}, United Kingdom`;
+
+    // Check if the full address is already in the cache
+    if (this.cache.has(fullAddress)) {
+      return this.cache.get(fullAddress)!;
     }
 
     const geocoder = await this.getGeocoder();
 
     return new Promise((resolve, reject) => {
-      geocoder.geocode({ address }, (results, status) => {
+      geocoder.geocode({ address: fullAddress }, (results, status) => {
         if (status === 'OK' && results?.length) {
           const loc = results[0].geometry.location;
           const latLng: google.maps.LatLngLiteral = { lat: loc.lat(), lng: loc.lng() };
-
-          // Cache the geocoded address for future use
-          this.cache.set(address, latLng);
-
-          // Dynamically store the city name and coordinates in the cache
-          const cityName = address.split(',')[0].trim(); // Assuming city is the first part of the address
+          this.cache.set(fullAddress, latLng);
+          const cityName = sanitizedAddress.split(',')[0].trim();
           if (!this.cache.has(cityName)) {
-            this.cache.set(cityName, latLng);  // Cache city name if it's not already cached
+            this.cache.set(cityName, latLng);
           }
-
           resolve(latLng);
         } else {
+          console.error('Geocode failed:', status);
           reject(status);
         }
       });

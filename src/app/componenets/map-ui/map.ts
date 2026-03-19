@@ -55,7 +55,8 @@ export class MapTracker {
    * @param customers An array of Customer objects to be loaded and displayed on the map.
    */
   private async loadCustomers(customers: Customer[]): Promise<void> {
-    await this.googleMapsLoader.loadCustomers(customers, this.filterBy(), this.cityOrPostcode()); this.updateMapCenterAndZoom();
+    await this.googleMapsLoader.loadCustomers(customers, this.filterBy(), this.cityOrPostcode());
+    await this.updateMapCenterAndZoom();
 
   }
 
@@ -87,7 +88,16 @@ export class MapTracker {
         }
       }
     } else if (this.filterBy() === 'Postcode') {
-      this.zoom.set(14);
+      console.log('Postcode filter selected, but geocoding is not implemented for postcodes yet.');
+      if (filterValue) {
+        this.zoom.set(14);
+        try {
+          const postcodeCoordinates = await this.googleMapsLoader.geocode(filterValue);
+          this.center.set(postcodeCoordinates);
+        } catch (error) {
+          console.error('Postcode geocoding failed:', error);
+        }
+      }
     }
   }
 }
